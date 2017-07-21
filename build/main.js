@@ -3347,18 +3347,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var DIRECTIONS = [['NS', 'NE', 'SN', 'SW'], ['NW', 'SE'], ['WN', 'WE', 'EW', 'ES'], ['EN', 'WS']];
 var TRAFFIC_LIGHTS = {
-	'NS': 'S-down',
-	'NE': 'S-right',
-	'SN': 'N-up',
-	'SW': 'N-left',
-	'NW': 'S-left',
-	'SE': 'N-right',
-	'WN': 'E-up',
-	'WE': 'E-right',
-	'EW': 'W-left',
-	'ES': 'W-down',
-	'EN': 'W-up',
-	'WS': 'E-down'
+	'NS': { 'name': 'S-down', 'color': 'red' },
+	'NE': { 'name': 'S-right', 'color': 'red' },
+	'SN': { 'name': 'N-up', 'color': 'red' },
+	'SW': { 'name': 'N-left', 'color': 'red' },
+	'NW': { 'name': 'S-left', 'color': 'red' },
+	'SE': { 'name': 'N-right', 'color': 'red' },
+	'WN': { 'name': 'E-up', 'color': 'red' },
+	'WE': { 'name': 'E-right', 'color': 'red' },
+	'EW': { 'name': 'W-left', 'color': 'red' },
+	'ES': { 'name': 'W-down', 'color': 'red' },
+	'EN': { 'name': 'W-up', 'color': 'red' },
+	'WS': { 'name': 'E-down', 'color': 'red' }
 };
 
 var GREEN_LIGHT_DURATION = 10000; //270000; 60 * 1000 * 4.5; // 4mins30sec
@@ -3553,34 +3553,45 @@ var Lights = function () {
 
 		this.config = config;
 		this.logger = new _Logger2.default();
+		this.trafficLights = config.getTrafficLights();
 	}
 
 	_createClass(Lights, [{
 		key: 'setGreenLights',
 		value: function setGreenLights() {
-			this.greenLights = this.config.getDirections()[this.getDirectionIndex()];
-			this.logger.write('Green ' + this.greenLights);
-			this.draw(this.greenLights, 'green');
+			var _this = this;
+
+			var lights = this.config.getDirections()[this.getDirectionIndex()];
+			lights.map(function (direction) {
+				_this.trafficLights[direction].color = 'green';
+			});
+			this.draw();
 		}
 	}, {
 		key: 'setYellowLights',
 		value: function setYellowLights() {
-			this.yellowLights = this.config.getDirections()[this.getDirectionIndex()];
-			this.logger.write('Yellow ' + this.yellowLights);
-			this.draw(this.yellowLights, 'orange');
+			var _this2 = this;
+
+			var lights = this.config.getDirections()[this.getDirectionIndex()];
+			lights.map(function (direction) {
+				_this2.trafficLights[direction].color = 'orange';
+			});
+			this.draw();
 		}
 	}, {
 		key: 'setRedLights',
 		value: function setRedLights() {
-			var directions = this.config.getDirections();
+			var currentGreenLights = this.config.getDirections()[this.getDirectionIndex()];
 
-			// merge 2-dimentional array
-			this.redLights = directions.map(function (e) {
-				return e.join(',');
-			}).join(',').split(',');
-			this.logger.write('Red ' + this.redLights);
+			for (var direction in this.trafficLights) {
+				var elementId = this.trafficLights[direction].name;
+				if (currentGreenLights.indexOf(elementId) >= 0) {
+					continue;
+				}
+				this.trafficLights[direction].color = 'red';
+			}
 
-			this.draw(this.redLights, 'red');
+			this.draw();
 		}
 	}, {
 		key: 'setDirectionIndex',
@@ -3594,12 +3605,13 @@ var Lights = function () {
 		}
 	}, {
 		key: 'draw',
-		value: function draw(lights, color) {
-			for (var i in lights) {
-				var light = lights[i];
-				var lightId = this.config.getTrafficLights()[light];
-				window.document.getElementById(lightId).style.color = color;
+		value: function draw() {
+			for (var direction in this.trafficLights) {
+				var elementId = this.trafficLights[direction].name;
+				var color = this.trafficLights[direction].color;
+				window.document.getElementById(elementId).style.color = color;
 			}
+			this.logger.write(JSON.stringify(this.trafficLights));
 		}
 	}]);
 

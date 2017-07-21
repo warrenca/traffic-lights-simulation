@@ -4,28 +4,33 @@ class Lights {
 	constructor(config) {
 		this.config = config;
 		this.logger = new Logger();
+		this.trafficLights = config.getTrafficLights();
 	}
 
 	setGreenLights() {
-		this.greenLights = this.config.getDirections()[this.getDirectionIndex()];
-		this.logger.write(`Green ${this.greenLights}`);
-		this.draw(this.greenLights, 'green');
+		let lights = this.config.getDirections()[this.getDirectionIndex()];
+		lights.map((direction) => {this.trafficLights[direction].color = 'green';});
+		this.draw();
 	}
 
 	setYellowLights() {
-		this.yellowLights = this.config.getDirections()[this.getDirectionIndex()];
-		this.logger.write(`Yellow ${this.yellowLights}`);
-		this.draw(this.yellowLights, 'orange');
+		let lights = this.config.getDirections()[this.getDirectionIndex()];
+		lights.map((direction) => {this.trafficLights[direction].color = 'orange';});
+		this.draw();
 	}
 
 	setRedLights() {
-		let directions = this.config.getDirections();
+		let currentGreenLights = this.config.getDirections()[this.getDirectionIndex()];
 
-		// merge 2-dimentional array
-		this.redLights = directions.map(e => e.join(',')).join(',').split(',');
-		this.logger.write(`Red ${this.redLights}`);
+		for (let direction in this.trafficLights) {
+			let elementId = this.trafficLights[direction].name;
+			if (currentGreenLights.indexOf(elementId) >= 0) {
+				continue;
+			}
+			this.trafficLights[direction].color = 'red';
+		}
 
-		this.draw(this.redLights, 'red');
+		this.draw();
 	}
 
 	setDirectionIndex(directionIndex) {
@@ -36,12 +41,13 @@ class Lights {
 		return this.directionIndex;
 	}
 
-	draw(lights, color) {
-		for (let i in lights) {
-			let light = lights[i];
-			let lightId = this.config.getTrafficLights()[light].name;
-			window.document.getElementById(lightId).style.color = color;
+	draw() {
+		for (let direction in this.trafficLights) {
+			let elementId = this.trafficLights[direction].name;
+			let color = this.trafficLights[direction].color;
+			window.document.getElementById(elementId).style.color = color;
 		}
+		this.logger.write(JSON.stringify(this.trafficLights));
 	}
 }
 
