@@ -1,22 +1,23 @@
-import Logger from './Logger';
+import {Logger, Draw} from './Util';
 
 class Lights {
 	constructor(config) {
 		this.config = config;
 		this.logger = new Logger();
 		this.trafficLights = config.getTrafficLights();
+		this.draw = new Draw();
 	}
 
 	setGreenLights() {
 		let lights = this.config.getDirections()[this.getDirectionIndex()];
 		lights.map((direction) => {this.trafficLights[direction].color = 'green';});
-		this.draw();
+		this.draw.traffic(this.getTrafficLights());
 	}
 
 	setYellowLights() {
 		let lights = this.config.getDirections()[this.getDirectionIndex()];
 		lights.map((direction) => {this.trafficLights[direction].color = 'orange';});
-		this.draw();
+		this.draw.traffic(this.getTrafficLights());
 	}
 
 	setRedLights() {
@@ -30,7 +31,7 @@ class Lights {
 			this.trafficLights[direction].color = 'red';
 		}
 
-		this.draw();
+		this.draw.traffic(this.getTrafficLights());
 	}
 
 	setDirectionIndex(directionIndex) {
@@ -41,13 +42,8 @@ class Lights {
 		return this.directionIndex;
 	}
 
-	draw() {
-		for (let direction in this.trafficLights) {
-			let elementId = this.trafficLights[direction].name;
-			let color = this.trafficLights[direction].color;
-			window.document.getElementById(elementId).style.color = color;
-		}
-		this.logger.write(JSON.stringify(this.trafficLights));
+	getTrafficLights() {
+		return this.trafficLights;
 	}
 }
 

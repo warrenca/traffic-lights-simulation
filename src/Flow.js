@@ -1,22 +1,22 @@
 import Lights from './Lights';
-import Logger from './Logger';
+import {Logger} from './Util';
 
 class Flow {
 	constructor(config) {
 		this.config = config;
 		this.lights = new Lights(config);
-		this.stop = false;
 		this.logger = new Logger();
 	}
 
 	start() {
+		this.status = true;
 		this.logger.write('Start!');
 		this.setDirectionIndexAndMove(this.getNextDirectionIndex());
 	}
 
 	hold() {
 		this.logger.write('End!');
-		this.stop = true;
+		this.status = false;
 	}
 
 	setDirectionIndexAndMove(directionIndex) {
@@ -24,19 +24,21 @@ class Flow {
 	}
 
 	async move() {
-		if (!this.stop) {
+		if (this.getStatus()) {
 			this.lights.setRedLights();
 			this.lights.setGreenLights();
 			await this.sleep(this.config.getGreenLightDuration());
 			this.lights.setYellowLights();
 			await this.sleep(this.config.getYellowLightDuration());
 
-			let nextDirectionIndex = this.getNextDirectionIndex();
-			this.setDirectionIndexAndMove(nextDirectionIndex);
+			this.setDirectionIndexAndMove(this.getNextDirectionIndex());
 		}
 	}
 
 	setDirectionIndex(directionIndex) {
+		if (directionIndex >= this.config.getDirections().length) {
+			throw new Error(`directionIndex is out of range`);
+		}
 		this.directionIndex = directionIndex;
 		this.lights.setDirectionIndex(directionIndex);
 		return this;
@@ -56,6 +58,10 @@ class Flow {
 
 	sleep(ms) {
   	return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	getStatus() {
+		return this.status;
 	}
 }
 

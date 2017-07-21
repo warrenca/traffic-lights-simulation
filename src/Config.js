@@ -19,9 +19,11 @@ const TRAFFIC_LIGHTS = {
 	'WS': {'name':'E-down'	, 'color':'red'},
 };
 
-const GREEN_LIGHT_DURATION  = 10000; //270000; 60 * 1000 * 4.5; // 4mins30sec
-const YELLOW_LIGHT_DURATION = 3000; //30000; 30 * 1000; // 30sec
-const DURATION_OF_SIMULATION = 60000; //1800000; 60 * 30 * 1000  // 30mins
+const GREEN_LIGHT_DURATION  =   270000; //270000; 60 * 1000 * 4.5; // 4mins30sec
+const YELLOW_LIGHT_DURATION = 	 30000; //270000; 30 * 1000; // 30sec
+const DURATION_OF_SIMULATION = 1800000; //1800000; 60 * 30 * 1000  // 30mins
+const LOG_TYPE = 'simple';
+
 class Config {
 	getDirections() {
 		return DIRECTIONS;
@@ -41,6 +43,10 @@ class Config {
 
 	getDurationOfSimulation() {
 		return DURATION_OF_SIMULATION;
+	}
+
+	getLogType() {
+		return LOG_TYPE;
 	}
 }
 
