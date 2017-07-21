@@ -39,7 +39,7 @@ class Lights {
 	draw(lights, color) {
 		for (let i in lights) {
 			let light = lights[i];
-			let lightId = this.config.getTrafficLights()[light];
+			let lightId = this.config.getTrafficLights()[light].name;
 			window.document.getElementById(lightId).style.color = color;
 		}
 	}

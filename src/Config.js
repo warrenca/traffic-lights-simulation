@@ -5,18 +5,18 @@ const DIRECTIONS = [
 	['EN','WS'],
 ];
 const TRAFFIC_LIGHTS = {
-	'NS': 'S-down',
-	'NE': 'S-right',
-	'SN': 'N-up',
-	'SW': 'N-left',
-	'NW': 'S-left',
-	'SE': 'N-right',
-	'WN': 'E-up',
-	'WE': 'E-right',
-	'EW': 'W-left',
-	'ES': 'W-down',
-	'EN': 'W-up',
-	'WS': 'E-down',
+	'NS': {'name':'S-down'	, 'color':'red'},
+	'NE': {'name':'S-right'	, 'color':'red'},
+	'SN': {'name':'N-up'		, 'color':'red'},
+	'SW': {'name':'N-left'	, 'color':'red'},
+	'NW': {'name':'S-left'	, 'color':'red'},
+	'SE': {'name':'N-right'	, 'color':'red'},
+	'WN': {'name':'E-up'		, 'color':'red'},
+	'WE': {'name':'E-right'	, 'color':'red'},
+	'EW': {'name':'W-left'	, 'color':'red'},
+	'ES': {'name':'W-down'	, 'color':'red'},
+	'EN': {'name':'W-up'		, 'color':'red'},
+	'WS': {'name':'E-down'	, 'color':'red'},
 };
 
 const GREEN_LIGHT_DURATION  = 10000; //270000; 60 * 1000 * 4.5; // 4mins30sec
