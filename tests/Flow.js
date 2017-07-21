@@ -55,27 +55,25 @@ describe('Flow', () => {
 		assert.equal(2, flow.getDirectionIndex());
 	});
 
-	it('Should get a false status after x amount of time', async () => {
+	it('Should get a false status after when flow stopped running', async () => {
 		const flow = new Flow(config);
 		flow.start();
 		setTimeout(()=>{
 			flow.hold();
-		}, 5000);
+		}, 2000);
 
-		assert.equal(true, flow.getStatus());
-		await flow.sleep(5000);
+		await flow.sleep(2000);
 		assert.equal(false, flow.getStatus());
 	});
 
-	it('Should fail to get a true status after x amount of time', async () => {
+	it('Should get a true status while flow is still running', async () => {
 		const flow = new Flow(config);
 		flow.start();
 		setTimeout(()=>{
 			flow.hold();
-		}, 5000);
+		}, 2000);
 
+		await flow.sleep(1000);
 		assert.equal(true, flow.getStatus());
-		await flow.sleep(5000);
-		assert.notEqual(true, flow.getStatus());
 	});
 });

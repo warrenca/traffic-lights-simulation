@@ -13,6 +13,10 @@ describe('Lights', () => {
 		assert.equal(1, lights.getDirectionIndex());
 	});
 
+	it('Should throw error when setting out of range directionIndex', () => {
+		assert.throws(()=>{lights.setDirectionIndex(5)}, Error, 'directionIndex is out of range');
+	});
+
 	it('Should set green lights', () => {
 		let directionIndex = 0;
 		lights.setDirectionIndex(directionIndex);

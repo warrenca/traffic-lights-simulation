@@ -2791,8 +2791,8 @@ var TRAFFIC_LIGHTS = {
 	'WS': { 'name': 'E-down', 'color': 'red' }
 };
 
-var GREEN_LIGHT_DURATION = 270000; //270000; 60 * 1000 * 4.5; // 4mins30sec
-var YELLOW_LIGHT_DURATION = 30000; //270000; 30 * 1000; // 30sec
+var GREEN_LIGHT_DURATION = 3000; //270000; 60 * 1000 * 4.5; // 4mins30sec
+var YELLOW_LIGHT_DURATION = 1000; //30000; 30 * 1000; // 30sec
 var DURATION_OF_SIMULATION = 1800000; //1800000; 60 * 30 * 1000  // 30mins
 var LOG_TYPE = 'simple';
 
@@ -4676,7 +4676,7 @@ var Flow = function () {
 	}, {
 		key: 'setDirectionIndex',
 		value: function setDirectionIndex(directionIndex) {
-			if (directionIndex >= this.config.getDirections().length) {
+			if (directionIndex < 0 || directionIndex >= this.config.getDirections().length) {
 				throw new Error('directionIndex is out of range');
 			}
 			this.directionIndex = directionIndex;
@@ -5021,6 +5021,9 @@ var Lights = function () {
 	}, {
 		key: 'setDirectionIndex',
 		value: function setDirectionIndex(directionIndex) {
+			if (directionIndex < 0 || directionIndex >= this.config.getDirections().length) {
+				throw new Error('directionIndex is out of range');
+			}
 			this.directionIndex = directionIndex;
 		}
 	}, {
@@ -10425,7 +10428,7 @@ var logger = new _Util.Logger();
 var flow = new _Flow2.default(config);
 
 var doIt = function doIt() {
-	logger.write('The program will only run for ' + config.getDurationOfSimulation() / 1000 + 's');
+	logger.write('The program will run for ' + config.getDurationOfSimulation() / 1000 + 's');
 	flow.start();
 	setTimeout(function () {
 		flow.hold();

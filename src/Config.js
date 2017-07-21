@@ -20,7 +20,7 @@ const TRAFFIC_LIGHTS = {
 };
 
 const GREEN_LIGHT_DURATION  =   270000; //270000; 60 * 1000 * 4.5; // 4mins30sec
-const YELLOW_LIGHT_DURATION = 	 30000; //270000; 30 * 1000; // 30sec
+const YELLOW_LIGHT_DURATION = 	 30000; //30000; 30 * 1000; // 30sec
 const DURATION_OF_SIMULATION = 1800000; //1800000; 60 * 30 * 1000  // 30mins
 const LOG_TYPE = 'simple';
 

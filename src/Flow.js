@@ -36,7 +36,7 @@ class Flow {
 	}
 
 	setDirectionIndex(directionIndex) {
-		if (directionIndex >= this.config.getDirections().length) {
+		if (directionIndex < 0 || directionIndex >= this.config.getDirections().length) {
 			throw new Error(`directionIndex is out of range`);
 		}
 		this.directionIndex = directionIndex;

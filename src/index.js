@@ -7,7 +7,7 @@ const logger = new Logger();
 const flow = new Flow(config);
 
 const doIt = () => {
-	logger.write(`The program will only run for ${config.getDurationOfSimulation()/1000}s`);
+	logger.write(`The program will run for ${config.getDurationOfSimulation()/1000}s`);
 	flow.start();
 	setTimeout(()=>{
 		flow.hold();

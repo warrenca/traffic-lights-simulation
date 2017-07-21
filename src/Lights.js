@@ -35,6 +35,9 @@ class Lights {
 	}
 
 	setDirectionIndex(directionIndex) {
+		if (directionIndex < 0 || directionIndex >= this.config.getDirections().length) {
+			throw new Error(`directionIndex is out of range`);
+		}
 		this.directionIndex = directionIndex;
 	}
 
