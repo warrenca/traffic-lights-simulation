@@ -2,6 +2,12 @@ import Config from './Config';
 
 const config = new Config();
 
+/**
+ * Logger class
+ *
+ * Writes the log in a textarea when viewed from the browser
+ * or write it in the console when in command line
+ */
 class Logger {
 	write(message) {
 		if (process.env.NODE_ENV !== 'test') {
@@ -14,7 +20,18 @@ class Logger {
 	}
 }
 
+/**
+ * Draw Class
+ *
+ * A class the describes what's the current traffic flow and the traffic lights color
+ */
 class Draw {
+	/**
+	 * quick - A method that simply changes the color of the traffic lights
+	 *
+	 * @param  array trafficLights The traffic lights from Config.TRAFFIC_LIGHTS
+	 * @return null
+	 */
 	quick(trafficLights) {
 		if ('browser' in process && process.browser) {
 			for (let direction in trafficLights) {
@@ -25,8 +42,15 @@ class Draw {
 		}
 	}
 
+	/**
+	 * traffic - Describe the current traffic flow and the traffic lights color
+	 *
+	 * @param  array trafficLights The traffic lights from Config.TRAFFIC_LIGHTS
+	 * @return null
+	 */
 	traffic(trafficLights) {
 		if (config.getLogType() === 'simple') {
+			// Simplify the traffic flow and lights description
 			let lights = {};
 			for (let direction in trafficLights) {
 				if (trafficLights[direction].color !== 'red') {
@@ -40,6 +64,7 @@ class Draw {
 				(new Logger).write(JSON.stringify(lights));
 			}
 		} else {
+			// More detailed traffic flow dna lights description
 			(new Logger).write(trafficLights);
 		}
 

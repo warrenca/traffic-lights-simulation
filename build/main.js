@@ -2775,7 +2775,14 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Traffic directions
+ */
 var DIRECTIONS = [['NS', 'NE', 'SN', 'SW'], ['NW', 'SE'], ['WN', 'WE', 'EW', 'ES'], ['EN', 'WS']];
+
+/**
+ * Traffic lights name and initial color based on the traffic directions
+ */
 var TRAFFIC_LIGHTS = {
 	'NS': { 'name': 'S-down', 'color': 'red' },
 	'NE': { 'name': 'S-right', 'color': 'red' },
@@ -2791,9 +2798,16 @@ var TRAFFIC_LIGHTS = {
 	'WS': { 'name': 'E-down', 'color': 'red' }
 };
 
-var GREEN_LIGHT_DURATION = 3000; //270000; 60 * 1000 * 4.5; // 4mins30sec
-var YELLOW_LIGHT_DURATION = 1000; //30000; 30 * 1000; // 30sec
-var DURATION_OF_SIMULATION = 1800000; //1800000; 60 * 30 * 1000  // 30mins
+/* The green light duration */
+var GREEN_LIGHT_DURATION = 7000; //270000; 60 * 1000 * 4.5; // 4mins30sec
+
+/* The yellow light duration */
+var YELLOW_LIGHT_DURATION = 4000; //30000; 30 * 1000; // 30sec
+
+/* The total duration of simulation */
+var DURATION_OF_SIMULATION = 130000; //1800000; 60 * 30 * 1000  // 30mins
+
+/* */
 var LOG_TYPE = 'simple';
 
 var Config = function () {
@@ -2803,29 +2817,71 @@ var Config = function () {
 
 	(0, _createClass3.default)(Config, [{
 		key: 'getDirections',
+
+
+		/**
+   * getDirections - Get the array of traffic directions
+   *
+   * @return array
+   */
 		value: function getDirections() {
 			return DIRECTIONS;
 		}
+
+		/**
+   * getTrafficLights - Get the array of traffic lights
+   *
+   * @return array
+   */
+
 	}, {
 		key: 'getTrafficLights',
 		value: function getTrafficLights() {
 			return TRAFFIC_LIGHTS;
 		}
+
+		/**
+   * getGreenLightDuration - Get the duration of the green light
+   *
+   * @return int
+   */
+
 	}, {
 		key: 'getGreenLightDuration',
 		value: function getGreenLightDuration() {
 			return GREEN_LIGHT_DURATION;
 		}
+
+		/**
+   * getYellowLightDuration - Get the duration of yellow light
+   *
+   * @return int
+   */
+
 	}, {
 		key: 'getYellowLightDuration',
 		value: function getYellowLightDuration() {
 			return YELLOW_LIGHT_DURATION;
 		}
+
+		/**
+   * getDurationOfSimulation - description
+   *
+   * @return int
+   */
+
 	}, {
 		key: 'getDurationOfSimulation',
 		value: function getDurationOfSimulation() {
 			return DURATION_OF_SIMULATION;
 		}
+
+		/**
+   * getLogType - Get the current log type
+   *
+   * @return string
+   */
+
 	}, {
 		key: 'getLogType',
 		value: function getLogType() {
@@ -3001,6 +3057,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var config = new _Config2.default();
 
+/**
+ * Logger class
+ *
+ * Writes the log in a textarea when viewed from the browser
+ * or write it in the console when in command line
+ */
+
 var Logger = function () {
 	function Logger() {
 		(0, _classCallCheck3.default)(this, Logger);
@@ -3021,6 +3084,13 @@ var Logger = function () {
 	return Logger;
 }();
 
+/**
+ * Draw Class
+ *
+ * A class the describes what's the current traffic flow and the traffic lights color
+ */
+
+
 var Draw = function () {
 	function Draw() {
 		(0, _classCallCheck3.default)(this, Draw);
@@ -3028,6 +3098,14 @@ var Draw = function () {
 
 	(0, _createClass3.default)(Draw, [{
 		key: 'quick',
+
+
+		/**
+   * quick - A method that simply changes the color of the traffic lights
+   *
+   * @param  array trafficLights The traffic lights from Config.TRAFFIC_LIGHTS
+   * @return null
+   */
 		value: function quick(trafficLights) {
 			if ('browser' in process && process.browser) {
 				for (var direction in trafficLights) {
@@ -3037,10 +3115,19 @@ var Draw = function () {
 				}
 			}
 		}
+
+		/**
+   * traffic - Describe the current traffic flow and the traffic lights color
+   *
+   * @param  array trafficLights The traffic lights from Config.TRAFFIC_LIGHTS
+   * @return null
+   */
+
 	}, {
 		key: 'traffic',
 		value: function traffic(trafficLights) {
 			if (config.getLogType() === 'simple') {
+				// Simplify the traffic flow and lights description
 				var lights = {};
 				for (var direction in trafficLights) {
 					if (trafficLights[direction].color !== 'red') {
@@ -3054,6 +3141,7 @@ var Draw = function () {
 					new Logger().write(JSON.stringify(lights));
 				}
 			} else {
+				// More detailed traffic flow dna lights description
 				new Logger().write(trafficLights);
 			}
 
@@ -4605,6 +4693,11 @@ var _Util = __webpack_require__(109);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Traffic Flow class
+ *
+ * This controls the traffic flow by providing methods such as start, hold, move, etc.
+ */
 var Flow = function () {
 	function Flow(config) {
 		(0, _classCallCheck3.default)(this, Flow);
@@ -4614,6 +4707,13 @@ var Flow = function () {
 		this.logger = new _Util.Logger();
 	}
 
+	/**
+  * start - simply start the simulation by getting the first direction and move
+  *
+  * @return null
+  */
+
+
 	(0, _createClass3.default)(Flow, [{
 		key: 'start',
 		value: function start() {
@@ -4621,17 +4721,41 @@ var Flow = function () {
 			this.logger.write('Start!');
 			this.setDirectionIndexAndMove(this.getNextDirectionIndex());
 		}
+
+		/**
+   * hold - End the simulation
+   *
+   * @return null
+   */
+
 	}, {
 		key: 'hold',
 		value: function hold() {
 			this.logger.write('End!');
 			this.status = false;
 		}
+
+		/**
+   * setDirectionIndexAndMove - An alias function to set the direction
+   * and move the traffic
+   *
+   * @param  int directionIndex The index from one of the elements in Config.DIRECTIONS, the current traffic flow
+   * @return null
+   */
+
 	}, {
 		key: 'setDirectionIndexAndMove',
 		value: function setDirectionIndexAndMove(directionIndex) {
 			this.setDirectionIndex(directionIndex).move();
 		}
+
+		/**
+   * move - Move the traffic to a certain direction.
+   * This also sets the correct traffic lights for each direction.
+   *
+   * @return null
+   */
+
 	}, {
 		key: 'move',
 		value: function () {
@@ -4673,6 +4797,16 @@ var Flow = function () {
 
 			return move;
 		}()
+
+		/**
+   * setDirectionIndex - Sets the directionIndex
+   * The index basically points to Config.DIRECTIONS
+   *
+   * @param  int directionIndex The index from one of the elements in Config.DIRECTIONS, the current traffic flow
+   * @return Flow
+   * @throw Error
+   */
+
 	}, {
 		key: 'setDirectionIndex',
 		value: function setDirectionIndex(directionIndex) {
@@ -4683,20 +4817,48 @@ var Flow = function () {
 			this.lights.setDirectionIndex(directionIndex);
 			return this;
 		}
+
+		/**
+   * getDirectionIndex - get the current directionIndex
+   *
+   * @return int
+   */
+
 	}, {
 		key: 'getDirectionIndex',
 		value: function getDirectionIndex() {
 			return this.directionIndex;
 		}
+
+		/**
+   * getNextDirectionIndex - get the next directionIndex
+   *
+   * @return int
+   */
+
 	}, {
 		key: 'getNextDirectionIndex',
 		value: function getNextDirectionIndex() {
 			if (typeof this.getDirectionIndex() === 'undefined' || this.getDirectionIndex() + 1 >= this.config.getDirections().length) {
+				// current directionIndex is not yet defined or out of range
 				return 0;
 			}
 
+			// Simply add 1 to the current directionIndex
 			return this.getDirectionIndex() + 1;
 		}
+
+		/**
+   * sleep - simple utility to delay any execution
+   * setTimeout can cause a time drift, thought we're not going to solve it here.
+   * Below are some of the solutions.
+   * https://stackoverflow.com/questions/29971898/how-to-create-an-accurate-timer-in-javascript
+   * https://gist.github.com/bjouhier/c7adb5f54caf9fc86d6e
+   *
+   * @param  int ms number of milliseconds to delay
+   * @return Promise
+   */
+
 	}, {
 		key: 'sleep',
 		value: function sleep(ms) {
@@ -4704,6 +4866,13 @@ var Flow = function () {
 				return setTimeout(resolve, ms);
 			});
 		}
+
+		/**
+   * getStatus - Get the traffic flow status
+   *
+   * @return bool
+   */
+
 	}, {
 		key: 'getStatus',
 		value: function getStatus() {
@@ -4971,6 +5140,17 @@ var _Util = __webpack_require__(109);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var TRAFFIC_LIGHT_GREEN = 'green';
+// We'll use orange because it looks better on the web
+var TRAFFIC_LIGHT_YELLOW = 'orange';
+var TRAFFIC_LIGHT_RED = 'red';
+
+/**
+ * Traffic Lights class
+ *
+ * This class controls the colors of the traffic lights
+ */
+
 var Lights = function () {
 	function Lights(config) {
 		(0, _classCallCheck3.default)(this, Lights);
@@ -4981,43 +5161,87 @@ var Lights = function () {
 		this.draw = new _Util.Draw();
 	}
 
+	/**
+  * setGreenLights - Set the traffic lights to green based on the direction of the traffic
+  *
+  * @return null
+  */
+
+
 	(0, _createClass3.default)(Lights, [{
 		key: 'setGreenLights',
 		value: function setGreenLights() {
 			var _this = this;
 
+			// Get the array traffic lights from the config
 			var lights = this.config.getDirections()[this.getDirectionIndex()];
+
+			// Set the traffic lights to green based on the direction of the traffic
 			lights.map(function (direction) {
-				_this.trafficLights[direction].color = 'green';
+				_this.trafficLights[direction].color = TRAFFIC_LIGHT_GREEN;
 			});
+
+			// Set the color of the traffic lights visually and print a log
 			this.draw.traffic(this.getTrafficLights());
 		}
+
+		/**
+   * setYellowLights - Set the traffic lights to yellow based on the direction of the traffic
+   *
+   * @return null
+   */
+
 	}, {
 		key: 'setYellowLights',
 		value: function setYellowLights() {
 			var _this2 = this;
 
+			// Get the array traffic lights from the config
 			var lights = this.config.getDirections()[this.getDirectionIndex()];
+
+			// Set the traffic lights to green based on the direction of the traffic
 			lights.map(function (direction) {
-				_this2.trafficLights[direction].color = 'orange';
+				_this2.trafficLights[direction].color = TRAFFIC_LIGHT_YELLOW;
 			});
+
+			// Set the color of the traffic lights visually and print a log
 			this.draw.traffic(this.getTrafficLights());
 		}
+
+		/**
+   * setRedLights - Set the traffic lights to red if they are not green
+   *
+   * @return null
+   */
+
 	}, {
 		key: 'setRedLights',
 		value: function setRedLights() {
+			// Get the array traffic lights from the config
 			var currentGreenLights = this.config.getDirections()[this.getDirectionIndex()];
 
+			// Loop through the greenLights and set the rest to red lights
 			for (var direction in this.trafficLights) {
 				var elementId = this.trafficLights[direction].name;
 				if (currentGreenLights.indexOf(elementId) >= 0) {
 					continue;
 				}
-				this.trafficLights[direction].color = 'red';
+				this.trafficLights[direction].color = TRAFFIC_LIGHT_RED;
 			}
 
+			// Set the color of the traffic lights visually and print a log
 			this.draw.traffic(this.getTrafficLights());
 		}
+
+		/**
+   * setDirectionIndex - Sets the directionIndex
+   * The index basically points to Config.DIRECTIONS
+   *
+   * @param  int directionIndex The index from one of the elements in Config.DIRECTIONS, the current traffic flow
+   * @return null
+   * @throw Error
+   */
+
 	}, {
 		key: 'setDirectionIndex',
 		value: function setDirectionIndex(directionIndex) {
@@ -5026,11 +5250,25 @@ var Lights = function () {
 			}
 			this.directionIndex = directionIndex;
 		}
+
+		/**
+   * getDirectionIndex - get the current directionIndex
+   *
+   * @return int
+   */
+
 	}, {
 		key: 'getDirectionIndex',
 		value: function getDirectionIndex() {
 			return this.directionIndex;
 		}
+
+		/**
+   * getTrafficLights - get the trafficLights array
+   *
+   * @return array
+   */
+
 	}, {
 		key: 'getTrafficLights',
 		value: function getTrafficLights() {
@@ -10427,20 +10665,25 @@ var config = new _Config2.default();
 var logger = new _Util.Logger();
 var flow = new _Flow2.default(config);
 
-var doIt = function doIt() {
+// Function to start the simulation
+var startSimulation = function startSimulation() {
 	logger.write('The program will run for ' + config.getDurationOfSimulation() / 1000 + 's');
 	flow.start();
+
+	// Stop the simulation when it reached the duration of simulation
 	setTimeout(function () {
 		flow.hold();
 	}, config.getDurationOfSimulation());
 };
 
 if ('browser' in process && process.browser) {
+	// Run the simulation upon browser load
 	window.onload = function () {
-		doIt();
+		startSimulation();
 	};
 } else {
-	doIt();
+	// Start the simulation from a command line
+	startSimulation();
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(152)))
 
